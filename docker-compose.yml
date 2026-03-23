@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # Service Backend (API)
+  bureau-api:
+    build: .
+    container_name: daydream-darkness-app
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DB_HOST=db-postgres # Terhubung ke service database di bawah
+      - DB_USER=bureau_admin
+      - DB_PASSWORD=secretpassword
+      - DB_NAME=bureau_db
+    depends_on:
+      - db-postgres # Tunggu database nyala dulu sebelum API nyala
+    restart: unless-stopped
+
+  # Service Database (PostgreSQL)
+  db-postgres:
+    image: postgres:15-alpine
+    container_name: daydream-darkness-db
+    environment:
+      - POSTGRES_USER=bureau_admin
+      - POSTGRES_PASSWORD=secretpassword
+      - POSTGRES_DB=bureau_db
+    ports:
+      - "5432:5432" # Port standar Postgres
+    volumes:
+      # Mounting init.sql agar otomatis membuat tabel saat container pertama dibuat
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
