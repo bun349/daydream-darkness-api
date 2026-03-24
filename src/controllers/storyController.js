@@ -1,41 +1,26 @@
-const express = require('express');
-const { Pool } = require('pg');
-const app = express();
-app.use(express.json());
+const pool = require('../data/db');
 
-// Konfigurasi koneksi (mengambil dari environment variable di docker-compose)
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: 5432,
-});
-
-// Helper untuk format kode unik Daydream Inc.
 const formatCode = (dangerClass, id) => `Qterw-${dangerClass}-${id}`;
 
-// ENDPOINT: Get All Darkness (Ghost Stories)
-app.get('/api/stories', async (req, res) => {
+// Tambahkan parameter 'next'
+exports.getAllStories = async (req, res, next) => {
   try {
     const result = await pool.query('SELECT * FROM darkness ORDER BY id ASC');
-    
-    // Transformasi data agar muncul field "code" sesuai permintaanmu
     const formattedData = result.rows.map(row => ({
       code: formatCode(row.danger_class, row.id),
       title: row.title,
       danger_class: `${row.danger_class}-Class`,
       description: row.description
     }));
-
     res.json({ status: "success", data: formattedData });
   } catch (err) {
-    res.status(500).json({ status: "error", message: err.message });
+    // Lempar error ke middleware
+    next(err); 
   }
-});
+};
 
-// ENDPOINT: Post New Story
-app.post('/api/stories', async (req, res) => {
+// Tambahkan parameter 'next'
+exports.createStory = async (req, res, next) => {
   const { title, danger_class, description } = req.body;
   try {
     const result = await pool.query(
@@ -48,8 +33,7 @@ app.post('/api/stories', async (req, res) => {
       data: { ...newStory, code: formatCode(newStory.danger_class, newStory.id) }
     });
   } catch (err) {
-    res.status(500).json({ status: "error", message: err.message });
+    // Lempar error ke middleware
+    next(err);
   }
-});
-
-app.listen(3000, () => console.log('Bureau API is active on port 3000'));
+};
