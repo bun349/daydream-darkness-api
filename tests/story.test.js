@@ -2,14 +2,13 @@ const request = require('supertest');
 const app = require('../src/app');
 const pool = require('../src/data/db');
 
-// Memalsukan (Mock) koneksi database agar tidak error saat testing di GitHub
 jest.mock('../src/data/db', () => ({
   query: jest.fn(),
 }));
 
 describe('Bureau API Testing', () => {
   afterEach(() => {
-    jest.clearAllMocks(); // Membersihkan memori mock setelah tiap test selesai
+    jest.clearAllMocks(); 
   });
 
   // 1. Test GET (Read All)
@@ -31,7 +30,6 @@ describe('Bureau API Testing', () => {
   it('POST /api/stories - Harus berhasil menambahkan anomali baru', async () => {
     const newStoryPayload = { title: 'The Black Cat', danger_class: 'S', description: 'Annihilation level.' };
     
-    // Mock balikan dari database saat INSERT berhasil
     pool.query.mockResolvedValue({
       rows: [
         { id: 2, title: 'The Black Cat', danger_class: 'S', description: 'Annihilation level.' }
@@ -44,7 +42,7 @@ describe('Bureau API Testing', () => {
 
     expect(response.statusCode).toBe(201);
     expect(response.body.status).toBe('success');
-    expect(response.body.data.code).toBe('Qterw-S-2'); // Pastikan format kode ter-generate
+    expect(response.body.data.code).toBe('Qterw-S-2'); 
     expect(response.body.data.title).toBe('The Black Cat');
   });
 
@@ -52,7 +50,6 @@ describe('Bureau API Testing', () => {
   it('PUT /api/stories/:id - Harus berhasil memperbarui data anomali', async () => {
     const updatePayload = { title: 'Chorus of the Sacrificial Lambs', danger_class: 'A', description: 'Updated info' };
     
-    // Mock balikan dari database saat UPDATE berhasil
     pool.query.mockResolvedValue({
       rows: [
         { id: 1, title: 'Chorus of the Sacrificial Lambs', danger_class: 'A', description: 'Updated info' }
@@ -70,7 +67,6 @@ describe('Bureau API Testing', () => {
 
   // 4. Test DELETE (Delete Sukses)
   it('DELETE /api/stories/:id - Harus berhasil menghapus data anomali', async () => {
-    // Mock balikan database saat DELETE berhasil (mengembalikan row yang dihapus)
     pool.query.mockResolvedValue({
       rows: [{ id: 1 }] 
     });
@@ -84,12 +80,11 @@ describe('Bureau API Testing', () => {
 
   // 5. Test Error Handling (Delete Gagal karena ID tidak ada)
   it('DELETE /api/stories/:id - Harus mengembalikan 404 jika data tidak ditemukan', async () => {
-    // Mock balikan database jika data tidak ada (array kosong)
     pool.query.mockResolvedValue({
       rows: [] 
     });
 
-    const response = await request(app).delete('/api/stories/999'); // ID 999 ngasal
+    const response = await request(app).delete('/api/stories/999'); 
 
     expect(response.statusCode).toBe(404);
     expect(response.body.status).toBe('error');

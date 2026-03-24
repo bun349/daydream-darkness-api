@@ -2,6 +2,7 @@ const pool = require('../data/db');
 
 const formatCode = (dangerClass, id) => `Qterw-${dangerClass}-${id}`;
 
+// READ (GET) - Mendapatkan semua cerita anomali
 exports.getAllStories = async (req, res, next) => {
   try {
     const result = await pool.query('SELECT * FROM darkness ORDER BY id ASC');
@@ -13,11 +14,11 @@ exports.getAllStories = async (req, res, next) => {
     }));
     res.json({ status: "success", data: formattedData });
   } catch (err) {
-    // Lempar error ke middleware
     next(err); 
   }
 };
 
+// CREATE (POST) - Menambahkan cerita anomali baru
 exports.createStory = async (req, res, next) => {
   const { title, danger_class, description } = req.body;
   try {
@@ -31,7 +32,6 @@ exports.createStory = async (req, res, next) => {
       data: { ...newStory, code: formatCode(newStory.danger_class, newStory.id) }
     });
   } catch (err) {
-    // Lempar error ke middleware
     next(err);
   }
 };
@@ -47,7 +47,6 @@ exports.updateStory = async (req, res, next) => {
       [title, danger_class, description, id]
     );
     
-    // Kalau data dengan ID tersebut tidak ada
     if (result.rows.length === 0) {
       return res.status(404).json({ status: "error", message: "Story not found in the Bureau Archive." });
     }
