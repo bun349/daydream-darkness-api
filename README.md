@@ -13,27 +13,124 @@ Sistem *backend* RESTful ini dibuat untuk mencatat dan mengelola entitas anomali
 * **Infrastruktur:** Docker, Docker Compose
 * **DevOps / Automasi:** GitHub Actions
 
+
 ---
 
 ## 2. Dokumentasi API
 
-### Endpoint List:
-* `GET /api/stories` : Mengambil daftar semua anomali yang terdaftar di database korporasi.
-* `POST /api/stories` : Mendaftarkan anomali (Ghost Story) baru.
-* `PUT /api/stories/:id` : Memperbarui data dan klasifikasi tingkat bahaya anomali.
-* `DELETE /api/stories/:id` : Menghapus catatan anomali dari arsip.
+Di bawah ini adalah spesifikasi rute API untuk mengelola aset supranatural (Darkness) di dalam *mainframe* korporasi Daydream Inc.
 
-### Format Response:
+---
 
-**Contoh JSON (Success - 200 OK / 201 Created):**
-```json
-{
-  "status": "success",
-  "data": {
-    "id": 1,
-    "code": "Qterw-A-1",
-    "title": "And They All Lived Unhappily Ever After",
-    "danger_class": "A-Class",
-    "description": "Fairy-tale ghost story."
-  }
-}
+### 1. Mendapatkan Semua Data Anomali
+Mengambil daftar semua anomali yang telah ditangkap atau sedang dipantau oleh korporasi.
+
+* **URL:** `/api/stories`
+* **Method:** `GET`
+* **Success Response:**
+  * **Code:** `200 OK`
+  * **Content:**
+    ```json
+    {
+      "status": "success",
+      "data": [
+        {
+          "code": "Qterw-A-1",
+          "title": "And They All Lived Unhappily Ever After",
+          "danger_class": "A-Class",
+          "description": "Fairy-tale ghost story."
+        }
+      ]
+    }
+    ```
+
+---
+
+### 2. Mendaftarkan Anomali Baru
+Mendaftarkan entitas anomali (Darkness) baru yang baru saja ditemukan untuk dikatalogkan sebagai aset.
+
+* **URL:** `/api/stories`
+* **Method:** `POST`
+* **Request Body (JSON):**
+  * `title` (string): Nama entitas anomali.
+  * `danger_class` (string): Klasifikasi tingkat bahaya (misal: S, A, B, C).
+  * `description` (string): Detail atau peringatan terkait entitas.
+* **Success Response:**
+  * **Code:** `201 Created`
+  * **Content:**
+    ```json
+    {
+      "status": "success",
+      "data": {
+        "id": 2,
+        "title": "The Black Cat",
+        "danger_class": "S",
+        "description": "Annihilation level.",
+        "code": "Qterw-S-2"
+      }
+    }
+    ```
+
+---
+
+### 3. Memperbarui Data Anomali
+Memperbarui informasi, klasifikasi bahaya, atau deskripsi dari anomali yang sudah terdaftar.
+
+* **URL:** `/api/stories/:id`
+* **Method:** `PUT`
+* **URL Parameters:**
+  * `id` (integer): ID unik dari anomali di dalam *database*.
+* **Request Body (JSON):**
+  * `title` (string): Nama entitas anomali yang baru.
+  * `danger_class` (string): Klasifikasi tingkat bahaya yang baru.
+  * `description` (string): Deskripsi yang diperbarui.
+* **Success Response:**
+  * **Code:** `200 OK`
+  * **Content:**
+    ```json
+    {
+      "status": "success",
+      "data": {
+        "id": 1,
+        "title": "Chorus of the Sacrificial Lambs",
+        "danger_class": "A",
+        "description": "Updated info regarding the sacrificial protocol.",
+        "code": "Qterw-A-1"
+      }
+    }
+    ```
+
+---
+
+### 4. Menghapus Data Anomali
+Menghapus catatan anomali dari arsip (biasanya dilakukan saat prosedur Annihilation-Sanctioned selesai dan aset sudah tidak menguntungkan).
+
+* **URL:** `/api/stories/:id`
+* **Method:** `DELETE`
+* **URL Parameters:**
+  * `id` (integer): ID unik dari anomali di dalam *database*.
+* **Success Response:**
+  * **Code:** `200 OK`
+  * **Content:**
+    ```json
+    {
+      "status": "success",
+      "message": "Story expunged successfully."
+    }
+    ```
+
+---
+
+### Format Error Global
+Jika terjadi kesalahan pada *endpoint* mana pun (misalnya data tidak ditemukan atau format salah), API akan mengembalikan respons berikut:
+
+* **Error Response:**
+  * **Code:** `404 Not Found` / `500 Internal Server Error`
+  * **Content:**
+    ```json
+    {
+      "status": "error",
+      "error_code": "INTERNAL_ERROR",
+      "message": "Story not found in the Bureau Archive."
+    }
+    ```
