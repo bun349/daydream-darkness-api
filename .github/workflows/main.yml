@@ -46,3 +46,32 @@ jobs:
       - name: Run Security Audit (npm audit)
         # Akan memindai package.json untuk mencari celah keamanan tinggi/kritis
         run: npm audit --audit-level=high
+
+# 3. Job untuk Continuous Delivery (CD)
+  Docker-Delivery-CD:
+    name: Build & Push Docker Image (CD)
+    runs-on: ubuntu-latest
+    # CD hanya berjalan kalau CI dan CS sukses (lulus ujian)
+    needs: [Unit-Testing-CI, Security-Scan-CS]
+    # Memberi izin GitHub Actions untuk nulis ke GitHub Packages
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          # Menggunakan nama repo kamu sebagai nama image-nya
+          tags: ghcr.io/${{ github.repository }}/bureau-api:latest
