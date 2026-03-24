@@ -38,6 +38,18 @@ Mengambil daftar semua anomali yang telah ditangkap atau sedang dipantau oleh ko
           "title": "And They All Lived Unhappily Ever After",
           "danger_class": "A-Class",
           "description": "Fairy-tale ghost story."
+        },
+        {
+          "code": "Qterw-C-2",
+          "title": "Hellfare Taxi",
+          "danger_class": "C-Class",
+          "description": "A taxi ghost story that appears when called at night using a specific number. (666666 4444 8282). Anyone who rides this taxi would be cursed without fail."
+        },
+        {
+          "code": "Qterw-C-3",
+          "title": "The Day I Died",
+          "danger_class": "C-Class",
+          "description": "A ghost story that pulls the victim into an unsuccessfully thriller-mystery, making them the sacrificed character.The first witness is always faced with the discovery of their own sacrificial corpse."
         }
       ]
     }
@@ -66,11 +78,11 @@ Mendaftarkan entitas anomali (Darkness) baru yang baru saja ditemukan untuk dika
     {
       "status": "success",
       "data": {
-        "id": 2,
-        "title": "The Black Cat",
-        "danger_class": "S",
-        "description": "Annihilation level.",
-        "code": "Qterw-S-2"
+        "id": 4,
+      "title": "Chorus of the Sacrificial Lambs",
+      "danger_class": "A",
+      "description": "The 'Chorus of the Sacrificial Lambs' consists of one conductor and 13 silver trays that are summoned. The heads of talk show contestants are placed on the silver trays, and their selection process is determined by that day's broadcast corner. Each head fused to a tray produces different phrases and instrument-like sounds, forming an acapella",
+        "code": "Qterw-A-3"
       }
     }
     ```
@@ -87,10 +99,10 @@ Memperbarui informasi, klasifikasi bahaya, atau deskripsi dari anomali yang suda
 * **Request Body Example:**
   * **Content:**
     ```json
-    {
-      "title": "Chorus of the Sacrificial Lambs",
-      "danger_class": "A",
-      "description": "Updated info regarding the sacrificial protocol."
+     {
+      "title": "Hellfare Taxi",
+      "danger_class": "C-Class",
+      "description": "A taxi ghost story that appears when called at night using a specific number. (666666 4444 8282). Anyone who rides this taxi would be cursed without fail. Talk to the driver to have less fatal curse"
     }
     ```
 * **Success Response:**
@@ -100,11 +112,11 @@ Memperbarui informasi, klasifikasi bahaya, atau deskripsi dari anomali yang suda
     {
       "status": "success",
       "data": {
-        "id": 1,
-        "title": "Chorus of the Sacrificial Lambs",
-        "danger_class": "A",
-        "description": "Updated info regarding the sacrificial protocol.",
-        "code": "Qterw-A-1"
+        "id": 2,
+        "title": "Hellfare Taxi",
+        "danger_class": "C-Class",
+        "description": "A taxi ghost story that appears when called at night using a specific number. (666666 4444 8282). Anyone who rides this taxi would be cursed without fail. Talk to the driver to have less fatal curse",
+        "code": "Qterw-C-Class-2"
       }
     }
     ```
