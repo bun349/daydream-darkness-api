@@ -1,5 +1,6 @@
 const express = require('express');
 const storyRoutes = require('./routes/storyRoutes');
+const errorHandler = require('./middleware/errorHandler'); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,7 +10,8 @@ app.use(express.json());
 // Daftarkan semua routes di sini
 app.use('/api/stories', storyRoutes);
 
-app.use(errorHandler);
+// Pasang Error Handler di sini (SETELAH routes)
+app.use(errorHandler); 
 
 // Jalankan server
 if (require.main === module) {
