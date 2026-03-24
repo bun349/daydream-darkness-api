@@ -1,0 +1,48 @@
+name: Bureau API Automation (CI/CS)
+
+# Workflow akan berjalan otomatis saat ada Push atau PR ke branch main/develop
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  # 1. Job untuk Continuous Integration (Unit Testing)
+  Unit-Testing-CI:
+    name: Run Unit Tests (CI)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Execute Unit Tests (Jest)
+        run: npm test
+
+  # 2. Job untuk Security Scan (CS)
+  Security-Scan-CS:
+    name: Vulnerability Scan (CS)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Run Security Audit (npm audit)
+        # Akan memindai package.json untuk mencari celah keamanan tinggi/kritis
+        run: npm audit --audit-level=high
